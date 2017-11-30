@@ -2,7 +2,7 @@
 
 const loaders = require('./loaders');
 
-module.exports = {
+const GraphQLBookshelf = {
     /**
      * Quick workaround allowing GraphQL to access model attributes directly
      * (to access a bookshelf model attribute (like model.name), we have to use the .get() method)
@@ -55,11 +55,13 @@ module.exports = {
             }
             if (isAssociation) {
                 context && context.loaders && context.loaders(model);
-                return model.fetch().then((c) => { return exposeAttributes(c); });
+                return model.fetch().then((c) => { return GraphQLBookshelf.exposeAttributes(c); });
             }
             const fn = (info.returnType.constructor.name === 'GraphQLList') ? 'fetchAll' : 'fetch';
-            return model[fn]().then((c) => { return exposeAttributes(c); });
+            return model[fn]().then((c) => { return GraphQLBookshelf.exposeAttributes(c); });
         };
     },
 
 };
+
+module.exports = GraphQLBookshelf;
